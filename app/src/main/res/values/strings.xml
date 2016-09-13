@@ -11,6 +11,7 @@
     <string name="menu_action_search">Поиск</string>
     <string name="title_activity_item">Товар</string>
     <string name="upload_menu_description">Выгрузить</string>
+    <string name="orders_menu_description">Отчет по заказам</string>
     <string name="refresh_menu_description">Обновить</string>
     <string name="delete_menu_description">Удалить заказ</string>
     <string name="title_activity_order_list">Заказ</string>
@@ -29,7 +30,7 @@
     <string name="debt_title">Баланс:</string>
     <string name="debt">Долг</string>
     <string name="open_order">Открыть заказ</string>
-    <string name="payment_history">История платежей</string>
+    <string name="payment_history">График платежей</string>
     <string name="db_refresh_title">Обновление базы данных</string>
     <string name="cancel">ОТМЕНИТЬ</string>
     <string name="delete_order_title">Удалить заказ?</string>
@@ -73,6 +74,16 @@
     <string name="uploaded_order_date">Заказ выг. %1$s</string>
     <string name="not_uploaded_order_date">Заказ не выг. %1$s</string>
     <string name="opened_in">Заказ открыт в %1$s</string>
+    <string name="min_order">Мин. заказ: %1$s</string>
+    <string name="client_title">Клиент</string>
+    <string name="htitle_date">ДАТА</string>
+    <string name="htitle_client">КЛИЕНТ</string>
+    <string name="htitle_sum">СУММА</string>
+    <string name="htitle_currency">ВАЛЮТА</string>
+    <string name="htitle_status">СТАТУС</string>
+    <string name="order_list_order_head_lines">СТРОКИ:</string>
+    <string name="title_description">ПРИМЕЧАНИЕ</string>
+    <string name="all_clients">ВСЕ</string>
 
     <plurals name="position_plurals">
         <item quantity="zero">позиций</item>
@@ -81,6 +92,14 @@
         <item quantity="few">позиции</item>
         <item quantity="many">позиций</item>
         <item quantity="other">позиций</item>
+    </plurals>
+    <plurals name="units_plurals">
+        <item quantity="zero">едениц</item>
+        <item quantity="one">единица</item>
+        <item quantity="two">единицы</item>
+        <item quantity="few">единиц</item>
+        <item quantity="many">единиц</item>
+        <item quantity="other">единиц</item>
     </plurals>
 
 </resources>

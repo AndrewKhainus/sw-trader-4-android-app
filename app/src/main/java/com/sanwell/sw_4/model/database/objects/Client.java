@@ -12,7 +12,6 @@ import com.sanwell.sw_4.model.database.OrdersDataModel;
 import com.sanwell.sw_4.model.database.cores.RClient;
 import com.sanwell.sw_4.model.database.cores.RDebt;
 import com.sanwell.sw_4.model.database.cores.RInvoice;
-import com.sanwell.sw_4.model.database.cores.RItem;
 import com.sanwell.sw_4.model.database.cores.RItemPlanInfo;
 import com.sanwell.sw_4.model.database.cores.ROrder;
 
@@ -30,16 +29,6 @@ public class Client implements Comparable {
     private String planPercentage;
     private boolean isSectionHeader = false;
 
-    public boolean hasOverdueInvoiceDebts() {
-        List<RInvoice> invoices = getInvoices();
-        for (RInvoice invoice : invoices) {
-            if (RInvoice.hasOverdueDebt(invoice)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public Client(RClient rClient) {
         if (rClient == null) {
             return;
@@ -53,6 +42,16 @@ public class Client implements Comparable {
 
     public Client() {
         isSectionHeader = false;
+    }
+
+    public boolean hasOverdueInvoiceDebts() {
+        List<RInvoice> invoices = getInvoices();
+        for (RInvoice invoice : invoices) {
+            if (RInvoice.hasOverdueDebt(invoice)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public String getComments() {

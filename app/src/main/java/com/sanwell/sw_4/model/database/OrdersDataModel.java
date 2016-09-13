@@ -204,6 +204,12 @@ public class OrdersDataModel {
                 .findFirst() != null;
     }
 
+    public boolean hasOrders() {
+        return DataModel.getInstance().realm
+                .where(ROrder.class)
+                .findFirst() != null;
+    }
+
     public static class SingletonHolder {
         public static final OrdersDataModel HOLDER_INSTANCE = new OrdersDataModel();
     }

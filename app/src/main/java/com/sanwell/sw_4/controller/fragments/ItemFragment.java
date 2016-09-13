@@ -1,8 +1,11 @@
 package com.sanwell.sw_4.controller.fragments;
 
 import android.app.Fragment;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,10 +41,7 @@ public class ItemFragment extends Fragment {
     private ArrayList<ItemPriceInfo> priceInfos;
     private String latestPrice = null;
     private TextView priceTextView, priceCurrencyTextView, priceSaleTextView, priceTypeTextView;
-
-    public String getLatestPrice() {
-        return latestPrice;
-    }
+    private TextView mMinOrderTV;
 
     public ItemFragment setOrder(Order order) {
         this.order = order;
@@ -53,7 +53,7 @@ public class ItemFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         currentItem = Helpers.currentItem;
         View view = inflater.inflate(R.layout.fragment_item_price, container, false);
         ((TextView) view.findViewById(R.id.fragment_item_currency)).setText(
@@ -84,17 +84,51 @@ public class ItemFragment extends Fragment {
         priceSaleTextView = (TextView) view.findViewById(R.id.fragment_item_default_discount);
         priceTypeTextView = (TextView) view.findViewById(R.id.fragment_item_default_price_type);
 
+        mMinOrderTV = (TextView) view.findViewById(R.id.min_order_tv);
+        mMinOrderTV.setText(getString(R.string.min_order, currentItem.getOrderMinCount()));
         countInputEditText = (EditText) view.findViewById(R.id.fragment_item_cost_count);
         countInputEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 countInputEditText.setCursorVisible(true);
+                countInputEditText.setFocusable(true);
+                countInputEditText.requestFocus();
+                countInputEditText.setSelection(countInputEditText.getText().length());
                 return false;
             }
         });
+        countInputEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                countInputEditText.setSelection(countInputEditText.getText().length());
+            }
+        });
+        countInputEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkMinOrder();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         view.findViewById(R.id.fragment_item_cost_apply_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String count = getCount();
+                double c = Item.safeParse(count);
+                if (c % currentItem.getMultFactor() != 0) {
+                    c = c - c % currentItem.getMultFactor();
+                    countInputEditText.setText(String.valueOf((int) (c)));
+                }
                 ((ItemActivity) getActivity()).deselectItem(true);
             }
         });
@@ -166,7 +200,20 @@ public class ItemFragment extends Fragment {
                 + "%)");
         TextView planned = (TextView) view.findViewById(R.id.fragment_item_info_planned);
         planned.setText("По плану: " + (int) currentItem.getPlan());
+
+        checkMinOrder();
         return view;
+    }
+
+    private void checkMinOrder() {
+        if (currentItem == null || mMinOrderTV == null || countInputEditText == null) return;
+        if (currentItem.getOrderMinCount() > Item.safeParse(getCount())) {
+            mMinOrderTV.setBackgroundResource(R.drawable.min_order_bg);
+            countInputEditText.setTextColor(Color.RED);
+        } else {
+            mMinOrderTV.setBackgroundResource(R.color.white_lilac);
+            countInputEditText.setTextColor(Color.BLACK);
+        }
     }
 
     @Override

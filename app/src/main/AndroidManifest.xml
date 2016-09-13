@@ -50,6 +50,15 @@
                 android:value="com.sanwell.sw_4.controller.activities.ClientsList" />
         </activity>
         <activity
+            android:name=".controller.activities.OrdersTotalListActivity"
+            android:label="@string/orders_menu_description"
+            android:parentActivityName=".controller.activities.ClientsList"
+            android:screenOrientation="landscape">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sanwell.sw_4.controller.activities.ClientsList" />
+        </activity>
+        <activity
             android:name=".controller.activities.CatalogueActivity"
             android:label="@string/title_activity_catalogue"
             android:parentActivityName=".controller.activities.OrderListActivity"

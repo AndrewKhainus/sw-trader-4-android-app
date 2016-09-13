@@ -15,7 +15,6 @@ import com.sanwell.sw_4.model.database.cores.RPriceSuggestion;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Locale;
 
 import io.realm.Realm;
@@ -46,7 +45,7 @@ public class Item {
     private double multFactor;
     private double a_a5_price;
     private double b_price, retail_price;
-//    private double c_price;
+    private int orderMinCount;
 
     public Item(RItemPlanInfo info) {
         if (info == null) {
@@ -67,14 +66,25 @@ public class Item {
         }
     }
 
+    public static Double safeParse(String s) {
+        Double v = 0.0;
+        try {
+            v = Double.parseDouble(s.replace(",", "."));
+        } catch (Exception ignored) {
+        }
+        return v;
+    }
+
+    public int getOrderMinCount() {
+        return orderMinCount;
+    }
+
     public boolean isFixedCurrency() {
         return isFixedCurrency;
     }
 
     private void readItem(RItem item) {
         title = item.getTitle();
-//        plan = item.getPlan();
-//        fact = item.getFact();
         ID = item.getId();
         hasPicture = item.isHasPicture();
         currencyID = item.getCurrencyID();
@@ -90,7 +100,6 @@ public class Item {
         a_a5_price = safeParse(item.getA_a5_price());
         b_price = safeParse(item.getB_price());
         retail_price = safeParse(item.getRetail_price());
-//        c_price = safeParse(item.getC_price());
         stock = item.getStockCount();
         numberOfItemsInPackage = item.getPackaging();
         isPricedUp = item.isPricedUp();
@@ -101,6 +110,7 @@ public class Item {
         isPromoted = item.isPromoted();
         measurement = item.getMeasurement();
         pickedImageThumb = item.getPickedImageThumb();
+        orderMinCount = item.getMinOrder();
         try {
             cost = Double.parseDouble(item.getPrice());
         } catch (Exception ignored) {
@@ -108,7 +118,7 @@ public class Item {
     }
 
     public double getMultFactor() {
-        return multFactor;
+        return multFactor == 0 ? 1 : multFactor;
     }
 
     public Integer getPickedImageThumb() {
@@ -126,15 +136,6 @@ public class Item {
             item.setPickedImageThumb(pickedImageThumb);
             realm.commitTransaction();
         }
-    }
-
-    public static Double safeParse(String s) {
-        Double v = 0.0;
-        try {
-            v = Double.parseDouble(s.replace(",", "."));
-        } catch (Exception ignored) {
-        }
-        return v;
     }
 
     public String getMeasurement() {
@@ -355,15 +356,15 @@ public class Item {
         String[] sales;
         String[] codes;
         if (suggestedPriceId.equals("1")) {
-            prices = new double[] {m2, m_5, m_4, m_3, m_2, m, a, a2, a5, b, p};
-            names = new String[] {"M", "M",   "M",   "M",   "M",   "M", "A", "А",   "А",   "Б", "Р"};
-            sales = new String[] {"2", "-5%", "-4%", "-3%", "-2%", "",  "",  "+2%", "+5%", "",  ""};
-            codes = new String[] {"1", "2",   "3",   "4",   "11",  "5", "6", "7",   "8",   "9", "10"};
+            prices = new double[]{m2, m_5, m_4, m_3, m_2, m, a, a2, a5, b, p};
+            names = new String[]{"M", "M", "M", "M", "M", "M", "A", "А", "А", "Б", "Р"};
+            sales = new String[]{"2", "-5%", "-4%", "-3%", "-2%", "", "", "+2%", "+5%", "", ""};
+            codes = new String[]{"1", "2", "3", "4", "11", "5", "6", "7", "8", "9", "10"};
         } else {
-            prices = new double[] {m_5, m_4, m_3, m_2, m, a, a2, a5, b, p};
-            names = new String[] {"M",   "M",   "M",   "M",   "M", "A", "А",   "А",   "Б", "Р"};
-            sales = new String[] {"-5%", "-4%", "-3%", "-2%", "",  "",  "+2%", "+5%", "",  ""};
-            codes = new String[] {"2",   "3",   "4",   "11",  "5", "6", "7",   "8",   "9", "10"};
+            prices = new double[]{m_5, m_4, m_3, m_2, m, a, a2, a5, b, p};
+            names = new String[]{"M", "M", "M", "M", "M", "A", "А", "А", "Б", "Р"};
+            sales = new String[]{"-5%", "-4%", "-3%", "-2%", "", "", "+2%", "+5%", "", ""};
+            codes = new String[]{"2", "3", "4", "11", "5", "6", "7", "8", "9", "10"};
         }
         double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
         for (double price : prices) {

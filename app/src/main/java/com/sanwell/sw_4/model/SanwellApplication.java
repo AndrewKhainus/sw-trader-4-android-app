@@ -6,6 +6,7 @@ import android.content.Context;
 import com.crashlytics.android.Crashlytics;
 import com.sanwell.sw_4.controller.activities.CatalogueActivity;
 import com.sanwell.sw_4.controller.activities.OrderListActivity;
+import com.sanwell.sw_4.model.database.DataModel;
 
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
@@ -30,6 +31,7 @@ public class SanwellApplication extends Application {
                 .schemaVersion(1)
                 .build();
         Realm.setDefaultConfiguration(rConfig);
+        DataModel.getInstance();
     }
 
 }

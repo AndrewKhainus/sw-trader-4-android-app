@@ -130,7 +130,7 @@ public class OrderListActivity extends AppCompatActivity {
                 boolean isVisible = heightDiff >= 150;
                 plusButton.setVisibility(isVisible ? View.INVISIBLE : View.VISIBLE);
                 commentImageView.setVisibility(plusButton.getVisibility());
-                if (order.isEmpty()) {
+                if (order != null && order.isEmpty()) {
                     fishImageView.setVisibility(plusButton.getVisibility());
                 }
                 plusButton.setVisibility(order != null && order.isOpen() ? plusButton.getVisibility() : View.GONE);

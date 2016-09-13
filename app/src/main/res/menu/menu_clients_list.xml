@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ClientsList">
     <item
+        android:id="@+id/action_orders"
+        android:icon="@drawable/content_management"
+        android:title="@string/orders_menu_description"
+        sanwell:showAsAction="ifRoom" />
+    <item
         android:id="@+id/action_upload"
         android:icon="@drawable/upload_icon"
         android:title="@string/upload_menu_description"

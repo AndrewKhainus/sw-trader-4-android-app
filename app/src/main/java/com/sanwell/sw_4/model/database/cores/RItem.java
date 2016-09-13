@@ -7,10 +7,10 @@ import io.realm.RealmObject;
  */
 public class RItem extends RealmObject {
 
+    public static final String ID_ROW = "id";
+
     private String id, parent, title;
-    //    private String clientID, groupID;
     private String measurement, packaging, currencyID, price;
-    //    private double plan, fact, planSum, factSum;
     private String stockCount;
     private int pickedImageThumb;
     private String m2_price, m_m5_price, m_m4_price, m_m3_price;
@@ -21,17 +21,17 @@ public class RItem extends RealmObject {
     private double multFactor;
     private String a_a5_price;
     private String npgId;
-    private String suggestedPriceId;
     private String b_price, retail_price, c_price;
     private boolean isFixedCurrency, isPromoted, isNew, isFocused, isPricedUp;
     private boolean hasPicture = false;
+    private int minOrder;
 
-    public String getSuggestedPriceId() {
-        return suggestedPriceId;
+    public int getMinOrder() {
+        return minOrder;
     }
 
-    public void setSuggestedPriceId(String suggestedPriceId) {
-        this.suggestedPriceId = suggestedPriceId;
+    public void setMinOrder(int minOrder) {
+        this.minOrder = minOrder;
     }
 
     public String getNpgId() {
@@ -265,53 +265,5 @@ public class RItem extends RealmObject {
     public void setTitle(String title) {
         this.title = title;
     }
-
-//    public String getClientID() {
-//        return clientID;
-//    }
-//
-//    public void setClientID(String clientID) {
-//        this.clientID = clientID;
-//    }
-
-//    public String getGroupID() {
-//        return groupID;
-//    }
-//
-//    public void setGroupID(String groupID) {
-//        this.groupID = groupID;
-//    }
-
-//    public double getPlan() {
-//        return plan;
-//    }
-//
-//    public void setPlan(double plan) {
-//        this.plan = plan;
-//    }
-
-//    public double getFact() {
-//        return fact;
-//    }
-//
-//    public void setFact(double fact) {
-//        this.fact = fact;
-//    }
-//
-//    public double getPlanSum() {
-//        return planSum;
-//    }
-//
-//    public void setPlanSum(double planSum) {
-//        this.planSum = planSum;
-//    }
-//
-//    public double getFactSum() {
-//        return factSum;
-//    }
-//
-//    public void setFactSum(double factSum) {
-//        this.factSum = factSum;
-//    }
 
 }

@@ -206,10 +206,10 @@ public class ClientsList extends AppCompatActivity {
                     return;
                 }
                 boolean hasConnection = ServerCommunicator.hasInternetConnection();
-                menu.getItem(0).setIcon(hasConnection && OrdersDataModel.getInstance().hasOpenedOrders()
+                menu.getItem(1).setIcon(hasConnection && OrdersDataModel.getInstance().hasOpenedOrders()
                         ? R.drawable.upload_icon
                         : R.drawable.upload_icon_inactive);
-                menu.getItem(1).setIcon(hasConnection && !ServerCommunicator.getInstance().isDbActual()
+                menu.getItem(2).setIcon(hasConnection && !ServerCommunicator.getInstance().isDbActual()
                         ? R.drawable.refresh_icon_black
                         : R.drawable.refresh_icon_black_inactive);
                 clientsListInfoFragment.setDBState(null);
@@ -255,13 +255,15 @@ public class ClientsList extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_upload) {
             if (!ServerCommunicator.hasInternetConnection()) {
-                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this, R.style.CommonAlertDialog);
+                android.support.v7.app.AlertDialog.Builder builder =
+                        new android.support.v7.app.AlertDialog.Builder(this, R.style.CommonAlertDialog);
                 builder.setMessage("Для отправки заказов необходимо стабильное подключение к интернет");
                 builder.setTitle("Нет подключения к интернет");
                 builder.setNegativeButton("Понятно", null);
                 builder.show();
             } else if (!OrdersDataModel.getInstance().hasOpenedOrders()) {
-                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this, R.style.CommonAlertDialog);
+                android.support.v7.app.AlertDialog.Builder builder =
+                        new android.support.v7.app.AlertDialog.Builder(this, R.style.CommonAlertDialog);
                 builder.setMessage("Для отправки заказа необходимо его создать");
                 builder.setTitle("Нет активных заказов.");
                 builder.setNegativeButton("Понятно", null);
@@ -293,6 +295,18 @@ public class ClientsList extends AppCompatActivity {
             } else {
                 findViewById(R.id.clients_list_refresh_db_cancel).setVisibility(View.VISIBLE);
                 refreshDBButtonAction(null);
+            }
+            return true;
+        } else if (id == R.id.action_orders) {
+            if (!OrdersDataModel.getInstance().hasOrders()) {
+                android.support.v7.app.AlertDialog.Builder builder =
+                        new android.support.v7.app.AlertDialog.Builder(this, R.style.CommonAlertDialog);
+                builder.setTitle("Нет заказов.");
+                builder.setMessage("Список заказов пуст.");
+                builder.setNegativeButton("Понятно", null);
+                builder.show();
+            } else {
+                startActivity(new Intent(this, OrdersTotalListActivity.class));
             }
             return true;
         }

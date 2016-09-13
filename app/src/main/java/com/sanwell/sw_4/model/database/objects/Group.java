@@ -21,30 +21,19 @@ public class Group {
     private String cacheRequest;
     private Boolean cacheResponse;
 
-    public boolean isInPlan() {
-        return isInPlan;
-    }
-
-    private boolean isInPlan = false;
-
     public Group(RGroup group) {
         this(group, false);
     }
 
     public Group(RGroup group, boolean isInPlan) {
-        this.isInPlan = isInPlan;
         if (group != null) {
             ID = group.getId();
             title = group.getName();
             isPlan = group.getIsPlanGroup();
         }
-        children = new ArrayList<>(getAllChildren());
+        children = new ArrayList<>(DataModel.getInstance()
+                .getItems(ID, Helpers.currentClient.getId(), isInPlan));
         filteredChildren = new ArrayList<>(children);
-    }
-
-    private ArrayList<Item> getAllChildren() {
-        return DataModel.getInstance()
-                .getItems(ID, Helpers.currentClient.getId(), isInPlan);
     }
 
     public void setSearchRequest(String searchRequest) {

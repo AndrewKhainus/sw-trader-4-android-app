@@ -7,8 +7,9 @@ import io.realm.RealmObject;
  */
 public class RClient extends RealmObject {
 
+    public static final String ID_ROW = "id";
+
     private String id, name, currencyID;
-//    private String overAllDebt, overAllOverdueDebt, overAllPayment;
     private String comment;
     private String debtString;
 
@@ -43,30 +44,6 @@ public class RClient extends RealmObject {
     public void setCurrencyID(String currencyID) {
         this.currencyID = currencyID;
     }
-
-//    public String getOverAllDebt() {
-//        return overAllDebt;
-//    }
-//
-//    public void setOverAllDebt(String overAllDebt) {
-//        this.overAllDebt = overAllDebt;
-//    }
-//
-//    public String getOverAllOverdueDebt() {
-//        return overAllOverdueDebt;
-//    }
-//
-//    public void setOverAllOverdueDebt(String overAllOverdueDebt) {
-//        this.overAllOverdueDebt = overAllOverdueDebt;
-//    }
-//
-//    public String getOverAllPayment() {
-//        return overAllPayment;
-//    }
-//
-//    public void setOverAllPayment(String overAllPayment) {
-//        this.overAllPayment = overAllPayment;
-//    }
 
     public String getComment() {
         return comment;

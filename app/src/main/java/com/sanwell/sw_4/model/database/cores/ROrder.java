@@ -10,6 +10,8 @@ import io.realm.RealmObject;
  */
 public class ROrder extends RealmObject {
 
+    public static final String CLIENT_ID_ROW = "clientID";
+
     private String orderID;
     private String clientID;
     private String openedIn;

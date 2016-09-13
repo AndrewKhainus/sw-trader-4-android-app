@@ -139,7 +139,7 @@ public class ItemActivity extends AppCompatActivity {
         });
     }
 
-    public void deselectItem(Boolean apply) {
+    public void deselectItem(boolean apply) {
         if (apply && stocksAdapter != null && currentOrder != null && itemFragment != null) {
             String count = itemFragment.getCount();
             double c = Item.safeParse(count);

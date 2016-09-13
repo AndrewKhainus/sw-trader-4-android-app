@@ -1,5 +1,7 @@
 package com.sanwell.sw_4.model.database;
 
+import android.support.annotation.Nullable;
+
 import com.sanwell.sw_4.model.HTMLWrapper;
 import com.sanwell.sw_4.model.SanwellApplication;
 import com.sanwell.sw_4.model.database.cores.RClient;
@@ -7,6 +9,7 @@ import com.sanwell.sw_4.model.database.cores.RCurrency;
 import com.sanwell.sw_4.model.database.cores.RGroup;
 import com.sanwell.sw_4.model.database.cores.RItem;
 import com.sanwell.sw_4.model.database.cores.RItemPlanInfo;
+import com.sanwell.sw_4.model.database.cores.ROrder;
 import com.sanwell.sw_4.model.database.objects.Client;
 import com.sanwell.sw_4.model.database.objects.Currency;
 import com.sanwell.sw_4.model.database.objects.Group;
@@ -16,10 +19,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmMigration;
 import io.realm.RealmResults;
+import io.realm.exceptions.RealmMigrationNeededException;
+import io.realm.internal.ColumnType;
+import io.realm.internal.Table;
 
 public class DataModel {
 
@@ -34,10 +42,33 @@ public class DataModel {
     }
 
     public static Realm createRealm() {
-        return Realm.getInstance(new RealmConfiguration.Builder(SanwellApplication.applicationContext)
+        Realm realm;
+        RealmConfiguration configuration = new RealmConfiguration.Builder(SanwellApplication.applicationContext)
                 .name("clients.realm")
-                .schemaVersion(1)
-                .build());
+                .schemaVersion(2)
+                .build();
+        try {
+            realm = Realm.getInstance(configuration);
+        } catch (RealmMigrationNeededException e) {
+            e.printStackTrace();
+            Realm.migrateRealm(new RealmConfiguration.Builder(SanwellApplication.applicationContext)
+                    .name("clients.realm")
+                    .schemaVersion(2)
+                    .build(), new RealmMigration() {
+                @Override
+                public long execute(Realm realm, long version) {
+                    if (version == 1) {
+                        Table table = realm.getTable(RItem.class);
+                        table.addColumn(ColumnType.INTEGER, "minOrder");
+                        table.removeColumn(table.getColumnIndex("suggestedPriceId"));
+                        version++;
+                    }
+                    return version;
+                }
+            });
+            realm = Realm.getDefaultInstance();
+        }
+        return realm;
     }
 
     public ArrayList<Client> getClients() {
@@ -52,6 +83,27 @@ public class DataModel {
             }
         }
         return clientsList;
+    }
+
+    @Nullable
+    public RClient getCoreClient(String clientId) {
+        return realm
+                .where(RClient.class)
+                .equalTo(RClient.ID_ROW, clientId)
+                .findFirst();
+    }
+
+    public List<ROrder> getCoreOrders(String clientId) {
+        return realm
+                .where(ROrder.class)
+                .equalTo(ROrder.CLIENT_ID_ROW, clientId)
+                .findAll();
+    }
+
+    public List<ROrder> getCoreOrders() {
+        return realm
+                .where(ROrder.class)
+                .findAll();
     }
 
     public ArrayList<Item> getItems(String parentID, String clientId, boolean isInPlan) {
@@ -150,12 +202,13 @@ public class DataModel {
         ArrayList<Group> groupArrayList = new ArrayList<>();
         RealmResults<RGroup> realmResults = realm.where(RGroup.class)
                 .equalTo("parent", parentID)
-//                .findAll();
                 .findAllSorted("name");
         if (realmResults != null) {
             int size = realmResults.size();
             for (int i = 0; i < size; i++) {
-                groupArrayList.add(new Group(realmResults.get(i)));
+                Group group = new Group(realmResults.get(i));
+                if (group.getChildren().size() != 0 || group.hasSubCategories())
+                    groupArrayList.add(group);
             }
         }
         return groupArrayList;
@@ -165,12 +218,14 @@ public class DataModel {
         ArrayList<Group> groupArrayList = new ArrayList<>();
         RealmResults<RGroup> realmResults = realm.where(RGroup.class)
                 .equalTo("isPlanGroup", "1")
-//                .findAll();
                 .findAllSorted("planOrder");
         if (realmResults != null) {
             int size = realmResults.size();
             for (int i = 0; i < size; i++) {
-                groupArrayList.add(new Group(realmResults.get(i), true));
+                Group group = new Group(realmResults.get(i), true);
+                if (group.getChildren().size() != 0 || group.hasSubCategories()) {
+                    groupArrayList.add(group);
+                }
             }
         }
         return groupArrayList;
@@ -185,6 +240,13 @@ public class DataModel {
         } else {
             return getPlanGroups();
         }
+    }
+
+    @Nullable
+    public RItem getCoreItem(String itemID) {
+        return realm.where(RItem.class)
+                .equalTo(RItem.ID_ROW, itemID)
+                .findFirst();
     }
 
     public static class SingletonHolder {

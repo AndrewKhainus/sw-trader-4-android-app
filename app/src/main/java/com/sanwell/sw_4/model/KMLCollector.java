@@ -113,9 +113,9 @@ public class KMLCollector {
         email.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uriList);
 
         email.setType("message/rfc822");
-        Intent chooser = Intent.createChooser(email, "Send location and orders information");
-        chooser.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(chooser);
+        email.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        context.startActivity(email);
         clear(context);
     }
 

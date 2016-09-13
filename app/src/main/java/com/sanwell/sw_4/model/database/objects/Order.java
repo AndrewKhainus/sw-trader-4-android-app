@@ -68,10 +68,6 @@ public class Order {
         isOpen = true;
     }
 
-    public String getClientId() {
-        return clientID;
-    }
-
     public String getCurrencyID() {
         return currencyID;
     }
@@ -132,10 +128,12 @@ public class Order {
         return getItems().isEmpty();
     }
 
-    public String getSummary() {
+    public String[] getSummaryDetailed() {
         ArrayList<Item> items = getItems();
-        double summ = 0.0, overheadSum = 0.0;
-        double overhead = 0, count = 0;
+        double summ = 0.0;
+        double count = 0;
+        int lines = 0;
+        int minLower = 0;
         for (Item item : items) {
             List<ROrderBatchInfo> infos = DataModel.getInstance()
                     .realm
@@ -145,6 +143,44 @@ public class Order {
                     .equalTo("itemID", item.getItemID())
                     .endGroup()
                     .findAll();
+            lines++;
+            boolean checked = false;
+            for (ROrderBatchInfo info : infos) {
+                double c = info.getItemsCount();
+                double p = info.getItemPrice();
+                summ += currency.defaultRound(c * p, info.getItemCurrencyID());
+                count += c;
+                if (!checked && info.getItemsCount() < item.getOrderMinCount()) {
+                    minLower++;
+                    checked = true;
+                }
+            }
+        }
+
+        String[] result = new String[2];
+        result[0] = String.valueOf(lines) + "/" + String.valueOf(minLower) + " " + SanwellApplication.applicationContext.getResources()
+                .getQuantityString(R.plurals.position_plurals, (int) count);
+        result[1] = String.format(Locale.US, "%.3f", summ);
+        return result;
+    }
+
+    public String getSummary() {
+        ArrayList<Item> items = getItems();
+        double summ = 0.0, overheadSum = 0.0;
+        double overhead = 0, count = 0;
+        int lines = 0;
+        int minLower = 0;
+        for (Item item : items) {
+            List<ROrderBatchInfo> infos = DataModel.getInstance()
+                    .realm
+                    .where(ROrderBatchInfo.class)
+                    .beginGroup()
+                    .equalTo("orderID", orderID)
+                    .equalTo("itemID", item.getItemID())
+                    .endGroup()
+                    .findAll();
+            lines++;
+            boolean checked = false;
             for (ROrderBatchInfo info : infos) {
                 double c = info.getItemsCount();
                 double p = info.getItemPrice();
@@ -153,8 +189,13 @@ public class Order {
                 overheadSum += currency.defaultRound(ov * p, info.getItemCurrencyID());
                 overhead += ov;
                 count += c;
+                if (!checked && info.getItemsCount() < item.getOrderMinCount()) {
+                    minLower++;
+                    checked = true;
+                }
             }
         }
+
         String sCount = String.valueOf((int) count);
         if (count % 1 != 0) {
             sCount = String.format(Locale.US, "%.2f", count);
@@ -163,8 +204,9 @@ public class Order {
         if (overhead % 1 != 0) {
             sOverhead = String.format(Locale.US, "%.2f", overhead);
         }
-        String html = sCount + " " + SanwellApplication.applicationContext.getResources()
-                .getQuantityString(R.plurals.position_plurals, (int) count) + " на сумму <font color=red>";
+        String html = String.valueOf(lines) + "/" + String.valueOf(minLower) + " " + SanwellApplication.applicationContext.getResources()
+                .getQuantityString(R.plurals.position_plurals, (int) count) + ", " + sCount + " " + SanwellApplication.applicationContext.getResources()
+                .getQuantityString(R.plurals.units_plurals, (int) count) + " на сумму <font color=red>";
         html += String.format(Locale.US, "%.3f", summ) + "</font>";
         return html + " (отказ: "
                 + sOverhead

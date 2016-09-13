@@ -147,6 +147,7 @@ public class SQLDataReader extends SQLiteAssetHelper {
             item.setRetail_price(c.getString(23));
             item.setC_price(c.getString(24));
             item.setNpgId(c.getString(25));
+            item.setMinOrder(c.getInt(26));
 
             itemHashMap.put(item.getId(), item);
         }
@@ -238,7 +239,7 @@ public class SQLDataReader extends SQLiteAssetHelper {
         }
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             String invoiceID = cursor.getString(1);
-            RInvoice invoice = invoiceHashMap.remove(invoiceID);
+            RInvoice invoice = invoiceHashMap.get(invoiceID);
             if (invoice == null) {
                 continue;
             }

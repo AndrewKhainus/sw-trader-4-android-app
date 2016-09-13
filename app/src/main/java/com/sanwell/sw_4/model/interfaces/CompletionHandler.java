@@ -5,6 +5,6 @@ package com.sanwell.sw_4.model.interfaces;
  */
 public interface CompletionHandler {
 
-    public void onCompletion(Boolean isCompleted);
+    void onCompletion(Boolean isCompleted);
 
 }
