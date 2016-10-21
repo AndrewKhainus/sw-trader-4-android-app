@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -153,11 +154,12 @@ public class ItemFragment extends Fragment {
 
             }
         });
-
+        //Уменьшить количество заказываемого товара
         view.findViewById(R.id.fragment_item_cost_seek_bar_min).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 double value = 0;
+                Log.wtf("SW4","Minus one pressed");
                 double step = currentItem.getMultFactor();
                 if (step == 0)
                     step = 1;
@@ -172,7 +174,7 @@ public class ItemFragment extends Fragment {
                 countInputEditText.setText(String.valueOf((int) (value)));
             }
         });
-
+        //Увеличить количество заказываемого товара
         view.findViewById(R.id.fragment_item_cost_seek_bar_max).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
