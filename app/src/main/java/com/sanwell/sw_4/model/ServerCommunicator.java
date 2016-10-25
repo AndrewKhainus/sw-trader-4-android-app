@@ -272,13 +272,13 @@ public class ServerCommunicator {
         VERSION_FILE {
             @Override
             public String toString() {
-                return "check_db";
+                return "check_db_kyiv";
             }
         },
         DATABASE_FILE {
             @Override
             public String toString() {
-                return "trade_pc.db";
+                return "trade_pc_kyiv.db";
             }
         },
         RESOURCES_FILE {
