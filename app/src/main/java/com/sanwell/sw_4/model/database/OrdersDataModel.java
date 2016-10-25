@@ -29,7 +29,7 @@ public class OrdersDataModel {
     public static final String CLIENT_ID_COLUMN = "clientID";
     public static final String ORDER_ID_COLUMN = "orderID";
     public static final String IS_OPENED_COLUMN = "isOpen";
-    public static final String DATE_FORMAT = "dd.MM.yyyy";
+    public static final String DATE_FORMAT = "dd.MM.yyyy_HH-mm-ss";
 
     public static OrdersDataModel getInstance() {
         return SingletonHolder.HOLDER_INSTANCE;
