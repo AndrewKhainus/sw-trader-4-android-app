@@ -169,7 +169,7 @@
         android:layout_above="@id/order_list_comment_box"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="9dp"
-        android:layout_marginRight="9dp"
+        android:layout_marginRight="129dp"
         android:background="@drawable/action_button_selector"
         android:onClick="addItem" />
 
