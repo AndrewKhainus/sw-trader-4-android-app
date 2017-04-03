@@ -465,7 +465,8 @@ public class ClientsList extends AppCompatActivity {
                     searchBar.setCursorVisible(true);
                 }
             });
-            searchBar.addTextChangedListener(new TextWatcher() {
+            // Removed by scream on 2016-10-26
+            /*searchBar.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
                 }
@@ -478,12 +479,13 @@ public class ClientsList extends AppCompatActivity {
                 @Override
                 public void afterTextChanged(Editable editable) {
                 }
-            });
+            });*/
             searchBar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                     if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                         SuggestionsAdapter.addSuggestion(ClientsList.this, SuggestionsAdapter.ActivityKind.CLIENTS_LIST, String.valueOf(searchBar.getText()));
                         hideSoftKeyboard();
+                        filterItems(String.valueOf(searchBar.getText()));
                         return true;
                     }
                     return false;
@@ -533,6 +535,8 @@ public class ClientsList extends AppCompatActivity {
         if (searchBar != null) {
             if (searchBar.getText() != null && !searchBar.getText().toString().isEmpty()) {
                 searchBar.setText(null);
+                setShowSearchBar(true);
+                showSuggestions();
             } else {
                 setShowSearchBar(false);
             }
@@ -551,6 +555,7 @@ public class ClientsList extends AppCompatActivity {
                 searchBar.setText(selectedSuggestion);
                 searchBar.setSelection(searchBar.getText().length());
                 hideSoftKeyboard();
+                filterItems(String.valueOf(searchBar.getText()));
             }
         });
     }
